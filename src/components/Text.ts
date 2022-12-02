@@ -69,21 +69,23 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
        * Need to make text selectable.
        */
       onActive() {
-        var t = this.getChildrenContainer().children;
-        if (t.length >= 1) {
-          for (var i = 0; i <= t.length; i++) {
-            if (t[i] != null) {
-              if (t[i].tagName != "BR") {
-                t[i].style.pointerEvents = "all"
+        this.getChildrenContainer().style.pointerEvents = 'all';
 
-                if (t[i].tagName == "A") {
-                  t[i].style.textDecoration = "none"
-                }
-              }
+        // var t = this.getChildrenContainer().children;
+        // if (t.length >= 1) {
+        //   for (var i = 0; i <= t.length; i++) {
+        //     if (t[i] != null) {
+        //       if (t[i].tagName != "BR") {
+        //         t[i].style.pointerEvents = "all"
 
-            }
-          }
-        }
+        //         if (t[i].tagName == "A") {
+        //           t[i].style.textDecoration = "none"
+        //         }
+        //       }
+
+        //     }
+        //   }
+        // }
 
       },
     },

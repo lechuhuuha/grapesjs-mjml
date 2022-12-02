@@ -17,13 +17,33 @@
     <!-- For grapesjs mjml -->
 
     <!-- For ckeditor -->
-    <script src="node_modules\ckeditor\ckeditor.js"></script>
+    <script src="boostrap\ckeditor\ckeditor.js"></script>
 
     <script src="node_modules/grapesjs-plugin-ckeditor/dist/grapesjs-plugin-ckeditor.min.js"></script>
     <!-- For ckeditor -->
 
     <script src="jquery/index.js" type="text/javascript"></script>
     <style>
+      .gjs-no-app{
+        height: unset !important;
+      }
+      .gjs-pn-btn {
+        font-size: 22px;
+      }
+      .gjs-two-color {
+        color: #b3b1b1 !important;
+      }
+      .gjs-one-bg {
+        background-color: #3b3b3b !important;
+      }
+      /* .gjs-layer-title remove padding */
+      /* .gjs-layer-title{
+        padding:  ;
+      } */
+      /* .gjs-editor {
+        font-size: 20px !important ;
+      } */
+      /* .gjs-two-color */
       .editor-row {
         display: flex;
         justify-content: flex-start;
@@ -37,7 +57,7 @@
 
       span.gjs-layer-name {
         font-family: Helvetica, sans-serif;
-        font-size: 10px;
+        font-size: 16px;
         /* text-transform: uppercase; */
       }
 
@@ -50,7 +70,7 @@
       }
 
       .gjs-frame {
-        width: 93%;
+        width: 100%;
       }
 
       .gjs-pn-options {
@@ -61,7 +81,7 @@
         flex-basis: 200px;
         position: relative;
         overflow-y: auto;
-        background-color: #282930;
+        background-color: #3b3b3b;
       }
 
       span.gjs-pn-btn.fa.fa-bars {

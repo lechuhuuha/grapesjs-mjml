@@ -7,3 +7,4 @@ locale/
 *.log
 _index.html
 .idea
+ckeditor
