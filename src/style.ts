@@ -22,7 +22,7 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
           ],
         }, {
           property: 'padding',
-          detached: true,
+          detached: false,
           properties: [
             { name: 'Top', property: 'padding-top' },
             { name: 'Right', property: 'padding-right' },
@@ -30,6 +30,12 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
             { name: 'Left', property: 'padding-left' }
           ],
         }, {
+          property: 'icon-padding',
+          type: 'integer',
+          defaults: '4px',
+          units: ['px', '%']
+        },
+        {
           property: 'icon-size',
           type: 'integer',
           defaults: '20px',
@@ -80,13 +86,21 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
               { value: 'underline', name: 'underline', className: 'fa fa-underline' },
               { value: 'line-through', name: 'Line-through', className: 'fa fa-strikethrough' }
             ],
-          },{
+          }, {
+            property: 'text-transform',
+            type: 'select',
+            list: [
+              { value: '' },
+              { value: 'capitalize' },
+            ]
+          },
+          {
             property: 'font-style',
             type: 'radio',
             defaults: 'normal',
             list: [
-              { value: 'normal', name: 'Normal', className: 'fa fa-font'},
-              { value: 'italic', name: 'Italic', className: 'fa fa-italic'}
+              { value: 'normal', name: 'Normal', className: 'fa fa-font' },
+              { value: 'italic', name: 'Italic', className: 'fa fa-italic' }
             ],
           }],
       }, {
@@ -103,12 +117,9 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
           type: 'file',
         }, {
           property: 'border-radius',
-          properties: [
-            { name: 'Top', property: 'border-top-left-radius' },
-            { name: 'Right', property: 'border-top-right-radius' },
-            { name: 'Bottom', property: 'border-bottom-left-radius' },
-            { name: 'Left', property: 'border-bottom-right-radius' }
-          ],
+          type: 'integer',
+          defaults: '0px',
+          units: ['px', '%']
         }, {
           property: 'border-detached',
           name: 'Border detached',

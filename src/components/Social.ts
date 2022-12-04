@@ -22,25 +22,29 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'container-background-color',
-          'color',
+          'color', 'icon-padding',
         ],
         'style-default': {
           'align': 'center',
           'icon-size': '20px',
           'font-size': '13px',
           'line-height': '22px',
+          'mode': 'horizontal'
         },
-        traits: [
-          {
-            type: 'select',
-            label: 'Mode',
-            name: 'mode',
-            options: [
-              { value: 'horizontal', name: 'Horizontal' },
-              { value: 'vertical', name: 'Vertical' },
-            ]
-          }
-        ],
+        //@note : when user need this i will comeback and review its bc right now mode not working for socialElement
+        // issues : https://github.com/artf/grapesjs-mjml/issues/125
+        // done : check file initGrapesjs.js line editor.TraitManager.addType('mode'
+        // traits: [
+        //   {
+        //     type: 'select',
+        //     label: 'Mode',
+        //     name: 'mode',
+        //     options: [
+        //       { value: 'horizontal', name: 'Horizontal' },
+        //       { value: 'vertical', name: 'Vertical' },
+        //     ]
+        //   }
+        // ],
       },
     },
 

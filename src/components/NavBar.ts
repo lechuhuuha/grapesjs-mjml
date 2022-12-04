@@ -21,6 +21,7 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
         },
         stylable: [
           // TODO
+          'align'
         ],
         traits: [
           {

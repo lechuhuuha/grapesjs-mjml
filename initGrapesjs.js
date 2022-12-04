@@ -53,7 +53,7 @@ CKEDITOR.dtd.$editable.a = 1
 CKEDITOR.dtd.$removeEmpty.span = 0;
 CKEDITOR.config.coreStyles_strike = { element: 'span', attributes: { 'style': 'text-decoration:line-through' }, overrides: 'strike' };
 CKEDITOR.config.coreStyles_underline = { element: 'span', attributes: { 'style': 'text-decoration:underline' } };
-
+CKEDITOR.config.defaultLanguage = 'vi';
 //// Set up GrapesJS editor with the MJML plugin
 var editor = grapesjs.init({
     layerManager: {
@@ -100,7 +100,7 @@ var editor = grapesjs.init({
     pluginsOpts: {
         'grapesjs-mjml': {
             i18n: {
-                locale: 'en', // default locale
+                locale : 'vi'
             }
         },
         'gjs-plugin-ckeditor': {
@@ -113,7 +113,7 @@ var editor = grapesjs.init({
                 extraAllowedContent: '*{*}', // Allows any class and any inline style
                 allowedContent: true, // Disable auto-formatting, class removing, etc.
                 enterMode: CKEDITOR.ENTER_BR,
-                extraPlugins: 'emoji,colorbutton,colordialog,dialogadvtab,hkemoji,liststyle',
+                extraPlugins: 'emoji,colorbutton,colordialog,dialogadvtab,hkemoji,liststyle,ematags',
                 toolbar: [
                     ['Bold', 'Italic', 'Underline', 'Strike'],
                     { name: 'paragraph', items: ['NumberedList', 'BulletedList', 'liststyle'] },
@@ -122,7 +122,7 @@ var editor = grapesjs.init({
                     // here why we need to call emoji its like this https://stackoverflow.com/questions/66364640/ckeditor-cant-install-emoji-plugin
                     {
                         name: 'insert', items: ['SpecialChar', 'EmojiPanel', 'HKemoji',
-                            // 'WrapForStyle'
+                            'ematags'
                         ]
                     },
                 ],
@@ -131,71 +131,53 @@ var editor = grapesjs.init({
     },
 });
 
-CKEDITOR.plugins.add('wrapForStyle', {
-    icons: 'fa fa-plus',
-    init: function (editor) {
-        editor.addCommand('wrapForStyle', {
-            exec: function (editor) {
-                //data-gjs-highlightable="true" id="iowvcv" data-gjs-type="text" draggable="false" class="gjs-selected cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
-                var fragment = editor.getSelection().getRanges()[0].extractContents()
-                var container = CKEDITOR.dom.element.createFromHtml("<span/>", editor.document)
-                container.setStyle("pointer-events", "all")
-                // container.setAttribute("data-gjs-highlightable", true)
-                container.setAttribute("data-gjs-type", "text")
-                // container.setAttribute("draggable", true)
-                // container.setAttribute("editable", true)
-                // container.setAttribute("contentEditable", true)
+// add tags in template 
+// how to : https://ckeditor.com/old/forums/CKEditor-3.x/Adding-links-Drop-Down-Menu
+CKEDITOR.plugins.add('ematags',
+    {
+        requires: ['richcombo'],
 
-                fragment.appendTo(container)
-                editor.insertElement(container)
-            }
-        });
-        editor.ui.addButton('WrapForStyle', {
-            label: 'Wrap for style',
-            command: 'wrapForStyle',
-            toolbar: 'insert'
-        });
-    }
-});
-// makeSpanEditable()
-function makeSpanEditable() {
-    const domComponents = editor.DomComponents;
+        init: function (editor) {
+            var config = editor.config;
 
-    let lol = domComponents.addType('span', {
-        isComponent: function (el) {
-            let result;
-            if (el.tagName == 'SPAN' && el.getAttribute("data-gjs-type") === "span") {
-                result = {
-                    type: 'span',
-                };
-            }
-            return result;
-        },
-        model: {
-            defaults: {
-                tagName: 'span',
-                editable: true,
-                droppable: false,
-                // ... all your other stuff
-            }
-        },
-        view: {
-            events: {
-                dblclick: 'onActive',
-                focusout: 'onDisable',
-            },
-            onActive() {
-                this.el.contentEditable = true;
-            },
-            onDisable() {
-                const { el, model } = this;
-                el.contentEditable = false;
-                model.set('content', el.innerHTML)
-            },
-        }
+            editor.ui.addRichCombo('ematags',
+                {
+                    label: "Chèn Tags",
+                    title: 'Chèn Tags',
+                    multiSelect: false,
+                    panel:
+                    {
+                        css: ['boostrap/ckeditor/skins/n1theme/editor.css'].concat(config.contentsCss)
+                    },
+
+                    init: function () {
+                        var customLinksOptions = ["{NAME}", "{EMAIL}"],
+                            customLinks;
+
+                        this.startGroup('Tags');
+                        // Loop over the Array, adding all items to the
+                        // combo.
+                        for (i = 0; i < customLinksOptions.length; i++) {
+                            customLinks = customLinksOptions[i];
+                            // value, html, text
+                            this.add(customLinks);
+                        }
+                        // Default value on first click
+                        // this.setValue("Value1", "Value1");
+                    },
+                    onClick: function (value) {
+                        editor.focus();
+                        editor.fire('saveSnapshot');
+                        editor.insertHtml(value);
+                        editor.fire('saveSnapshot');
+                    }
+                });
+            // End of richCombo element
+        } //Init
     });
-    console.log(lol)
-}
+
+
+
 // lấy ảnh trong template,campaign hoặc automation
 var images
 fetch('https://appv4.zozo.vn/mjml-test/getpathImagesTest')
@@ -214,6 +196,8 @@ fetch('https://appv4.zozo.vn/mjml-test/returnEmailContent/' + templateUId)
     }
     ).then((text) => {
         editor.setComponents(text)
+    }).catch((error) => {
+        console.log(error)
     });
 let storageS = new LocalStorageService();
 const storageComponents = storageS.getCustomComponents();
@@ -373,6 +357,101 @@ function saveComponent(selectedComponent, mjml) {
 };
 //// Section for grapesjs event
 
+// Update component
+editor.DomComponents.addType('mj-social', {
+    model: {
+        defaults: {
+            traits: [
+                {
+                    type: 'mode',
+                    label: 'Chế độ',
+                    name: 'mode',
+                }
+            ]
+        }
+    }
+});
+editor.TraitManager.addType('mode', {
+    // Expects as return a simple HTML string or an HTML element
+    createInput({ trait }) {
+        let selected = "selected='selected'";
+        // Here we can decide to use properties from the trait
+        const traitOpts = trait.get('options') || [];
+        const options = traitOpts.length ? traitOpts : [
+            { id: 'horizontal', name: 'Theo chiều ngang' },
+            { id: 'vertical', name: 'Theo chiều dọc' },
+        ];
+        try {
+            if (trait.target.getAttributes()['mode']
+                && trait.target.getAttributes()['mode'] == "horizontal") {
+                options[0].selected = true
+            } else {
+                options[1].selected = true
+            }
+        } catch (e) {
+        }
+        // Create a new element container and add some content
+        const el = document.createElement('div');
+        el.innerHTML = `
+        <select class="href-next__type">
+        <option value="" selected disabled hidden>Choose here</option>
+          ${options.map(function (opt) {
+            if (opt.selected == true) {
+                return `<option ${selected} value="${opt.id}">${opt.name}</option>`
+            } else {
+                return `<option value="${opt.id}">${opt.name}</option>`
+            }
+        }).join('')}
+        </select>
+      `;
+        return el;
+    },
+    onEvent({ elInput, component, event }) {
+        const inputType = elInput.querySelector('.href-next__type');
+        if (inputType.value == "horizontal") {
+            editor.on('component:update', (componentTest) => {
+                if (componentTest.attributes.tagName == "mj-social") {
+                    let childSocialElement = component.view.getChildrenContainer().childNodes
+                    for (let i = 0; i < childSocialElement.length; i++) {
+                        componentTest.view.getChildrenContainer().childNodes[i].setAttribute("style", "float: none; display: inline-table;")
+                    }
+                }
+            });
+        } else {
+            editor.on('component:update', (componentTest) => {
+                if (componentTest.attributes.tagName == "mj-social") {
+                    let childSocialElement = component.view.getChildrenContainer().childNodes
+                    for (let i = 0; i < childSocialElement.length; i++) {
+                        componentTest.view.getChildrenContainer().childNodes[i].setAttribute("style", "margin: 0px;")
+                    }
+                }
+            });
+        }
+        component.addAttributes({ "mode": inputType.value })
+    }
+});
+
+editor.on('component:mount', (componentTest) => {
+    if (componentTest.attributes.tagName == "mj-social") {
+        if (componentTest.attributes.attributes.mode == "horizontal") {
+            if (componentTest.attributes.tagName == "mj-social") {
+                let childSocialElement = componentTest.view.getChildrenContainer().childNodes
+                for (let i = 0; i < childSocialElement.length; i++) {
+                    componentTest.view.getChildrenContainer().childNodes[i].setAttribute("style", "float: none; display: inline-table;")
+                }
+            }
+
+        } else {
+            if (componentTest.attributes.tagName == "mj-social") {
+                let childSocialElement = componentTest.view.getChildrenContainer().childNodes
+                for (let i = 0; i < childSocialElement.length; i++) {
+                    componentTest.view.getChildrenContainer().childNodes[i].setAttribute("style", "margin: 0px;")
+                }
+            }
+
+        }
+    }
+});
 
 //// Section for grapesjs panel manager
 // lưu mjml và html vào db
@@ -399,6 +478,7 @@ function saveEditor() {
         var modalSuccess = editor.Modal;
         modalSuccess.open({
             title: 'Lưu thành công',
+            content: ' ',
             attributes: { class: 'my-class' },
         });
         console.log("Request complete! response:", res);
@@ -421,7 +501,7 @@ function sendMail() {
 
     const container = document.createElement('div');
 
-    const inputHtml = `<form id="form-sendmail">   <div class="form-group">     <label>Tiêu đề</label>     <input       type="text"       class="form-control"       id="subject"       name="subject"       aria-describedby="emailHelp"       placeholder="Enter email"     />     <label>Email Người gửi</label>     <input       type="email"       class="form-control"       id="from_email"       name="from_email"       aria-describedby="emailHelp"       placeholder="Enter email"     />     <label>Tên Người gửi</label>     <input       type="text"       class="form-control"       id="from_name"       name="from_name"       aria-describedby="emailHelp"       placeholder="Enter name"     />     <label>Email người nhận</label>     <input       type="email"       class="form-control"       id="to"       name="to"       aria-describedby="emailHelp"       placeholder="Enter email"     />     <button class="gjs-btn-prim gjs-btn-import" type="submit">Submit</button>   </div> </form> `;
+    const inputHtml = `<form id="form-sendmail">   <div class="form-group">     <label>Tiêu đề</label>     <input       type="text"       class="form-control"       id="subject"       name="subject"       aria-describedby="emailHelp"       placeholder="Nhập tiêu đề"     />     <label>Email Người gửi</label>     <input       type="email"       class="form-control"       id="from_email"       name="from_email"       aria-describedby="emailHelp"       placeholder="Nhập mail người gửi"     />     <label>Tên Người gửi</label>     <input       type="text"       class="form-control"       id="from_name"       name="from_name"       aria-describedby="emailHelp"       placeholder="Nhập tên người gửi"     />     <label>Email người nhận</label>     <input       type="email"       class="form-control"       id="to"       name="to"       aria-describedby="emailHelp"       placeholder="Nhập email người nhận"     />     <button class="gjs-btn-prim gjs-btn-import" type="submit">Submit</button>   </div> </form> `;
 
     sendMailModal.setTitle('Config');
     container.innerHTML = inputHtml;
@@ -521,6 +601,9 @@ block_manager.add("mj-group", {
 //// Section for grapesjs block manager
 
 
+//// Section for grapesjs style manager
+
+//// Section for grapesjs style manager
 
 //// Section for ultis function and class
 const indentPad = n => Array(n + 1).join(' ')

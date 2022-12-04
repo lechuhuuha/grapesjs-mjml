@@ -17,7 +17,11 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         draggable: componentsToQuery([typeColumn, typeHero]),
         droppable: false,
         'style-default': { height: '20px' },
-        stylable: ['height', 'container-background-color'],
+        stylable: [
+          'height',
+          'container-background-color',
+          // 'padding' dont need its
+        ],
         void: false,
       },
     },

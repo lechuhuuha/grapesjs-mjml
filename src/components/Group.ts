@@ -7,7 +7,6 @@ import { type as typeColumn } from './Column';
 export const type = 'mj-group';
 
 export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
-  console.log('test if addede')
 
   editor.Components.addType(type, {
     isComponent: isComponentType(type),
@@ -33,7 +32,6 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       },
 
       getMjmlTemplate() {
-        console.log('test getMjmlTemplate')
 
         return {
           start: `<mjml><mj-body>`,
@@ -44,7 +42,6 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         return sandboxEl.querySelector('div').innerHTML;
       },
       getChildrenSelector() {
-        console.log('test getChildrenSelector')
 
         return 'div';
       },

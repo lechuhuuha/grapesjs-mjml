@@ -34,7 +34,6 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
     init() {
       const attrs = { ...this.get('attributes') };
       const style = { ...this.get('style-default'), ...this.get('style') };
-
       for (let prop in style) {
         if (!(prop in attrs)) {
           attrs[prop] = style[prop];

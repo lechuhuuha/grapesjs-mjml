@@ -16,11 +16,12 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         draggable: componentsToQuery(typeSocial),
         stylable: [
           'icon-size', 'text-decoration', 'align', 'font-family', 'font-size', 'line-height',
-          'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
+          // padding not working properly with mode verital so i remove its and let social handle
+          // 'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'background-color',
           'color',
-          'vertical-align',
+          'vertical-align'
         ],
         'style-default': {
           'align': 'center',
@@ -63,7 +64,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       ...coreMjmlView,
       tagName: 'table',
       attributes: {
-        style: 'float: none; display: inline-table;',
+        // style: '',
       },
 
       getMjmlTemplate() {

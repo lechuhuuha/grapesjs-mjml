@@ -5,6 +5,8 @@ import loadCommands from './commands';
 import loadPanels from './panels';
 import loadStyle from './style';
 import en from './locale/en';
+import vi from './locale/vi';
+import loadTraits from './traits';
 
 export type PluginOptions = {
   /**
@@ -78,7 +80,7 @@ export type PluginOptions = {
    * Hide the default selector manager
    * @default true
    */
-   hideSelector?: boolean;
+  hideSelector?: boolean;
 
   /**
    * Experimental: use XML parser instead of HTML.
@@ -86,7 +88,7 @@ export type PluginOptions = {
    * @default false
    * @experimental
    */
-   useXmlParser?: boolean;
+  useXmlParser?: boolean;
 
   /**
    * Column padding (this way it's easier to select columns)
@@ -124,7 +126,7 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opt = {}) => {
   const opts: RequiredPluginOptions = {
     blocks: [
       'mj-1-column', 'mj-2-columns', 'mj-3-columns', 'mj-text', 'mj-button', 'mj-image', 'mj-divider', 'mj-social-group',
-      'mj-social-element', 'mj-spacer', 'mj-navbar', 'mj-navbar-link', 'mj-hero', 'mj-wrapper', 'mj-raw','mj-group'
+      'mj-social-element', 'mj-spacer', 'mj-navbar', 'mj-navbar-link', 'mj-hero', 'mj-wrapper', 'mj-raw', 'mj-group'
     ],
     block: () => ({}),
     codeViewerTheme: 'hopscotch',
@@ -206,11 +208,12 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opt = {}) => {
 
   // @ts-ignore Load i18n files
   editor.I18n.addMessages({
-    en,
+    en, vi,
     ...opts.i18n,
   });
 
   [
+    loadTraits,
     loadBlocks,
     loadComponents,
     loadCommands,

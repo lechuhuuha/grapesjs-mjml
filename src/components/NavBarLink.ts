@@ -19,6 +19,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           'font-style', 'font-size', 'font-weight', 'font-family', 'color',
           'text-decoration', 'text-transform',
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
+          'letter-spacing','line-height'
         ],
         'style-default': {
           'font-size': '13px',
