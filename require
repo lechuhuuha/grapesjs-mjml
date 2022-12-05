@@ -1,0 +1,12 @@
+cần các folder sau 
+boostrap
+dist
+icon
+jquery
+locale
+node_modules/grapesjs
+node_modules/grapesjs-plugin-ckeditor
+
+cần các file sau
+index.html
+initGrapesjs.js

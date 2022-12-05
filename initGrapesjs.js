@@ -100,7 +100,7 @@ var editor = grapesjs.init({
     pluginsOpts: {
         'grapesjs-mjml': {
             i18n: {
-                locale : 'vi'
+                locale: 'vi'
             }
         },
         'gjs-plugin-ckeditor': {
@@ -344,6 +344,7 @@ function saveComponent(selectedComponent, mjml) {
         const customComponent = {
             blockId: blockId,
             category: 'Custom component',
+            open: false,
             label: `${blockName}`,
             media: '<i class="fa fa-bookmark" style="font-size: 40px;" aria-hidden="true"></i>',
             content: mjml,
@@ -565,7 +566,19 @@ const block_manager = editor.BlockManager;
 block_manager.add("mj-4-columns", {
     category: "Bố cục",
     label: "4 Columns",
-    media: `    <img src="icon/layout/4_columns.png" style="width: 100%; alt=""> `,
+    media: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<g id="XMLID_1_">
+   <polygon id="XMLID_3_" points="8.4,8.4 8.4,15.8 120.1,15.8 120.1,496.2 15.8,496.2 15.8,8.4 8.4,8.4 8.4,15.8 8.4,8.4 0,8.4 
+       0,512 135.9,512 135.9,0 0,0 0,8.4 	"/>
+   <polygon id="XMLID_4_" points="128.5,8.4 128.5,15.8 247.6,15.8 247.6,496.2 135.9,496.2 135.9,8.4 128.5,8.4 128.5,15.8 
+       128.5,8.4 120.1,8.4 120.1,512 264.4,512 264.4,0 120.1,0 120.1,8.4 	"/>
+   <polygon id="XMLID_5_" points="256,8.4 256,15.8 367.7,15.8 367.7,496.2 264.4,496.2 264.4,8.4 256,8.4 256,15.8 256,8.4 
+       247.6,8.4 247.6,512 383.5,512 383.5,0 247.6,0 247.6,8.4 	"/>
+   <polygon id="XMLID_6_" points="376.1,8.4 376.1,15.8 496.2,15.8 496.2,496.2 383.5,496.2 383.5,8.4 376.1,8.4 376.1,15.8 
+       376.1,8.4 367.7,8.4 367.7,512 512,512 512,0 367.7,0 367.7,8.4 	"/>
+</g>
+</svg>`,
     content: `<mj-section>
     <mj-column><mj-text>Content 1</mj-text></mj-column>
     <mj-column><mj-text>Content 2</mj-text></mj-column>
@@ -577,7 +590,7 @@ block_manager.add("mj-4-columns", {
 block_manager.add("mj-group", {
     category: "Bố cục",
     label: "Groups",
-    media: `    <img src="icon/layout/4_columns.png" style="width: 100%; alt=""> `,
+    media: `<i class="fa fa-object-group" style="font-size: 40px;" aria-hidden="true"></i> `,
     content: `  
     <mj-section>
     <mj-group>
