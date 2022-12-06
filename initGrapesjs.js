@@ -8,7 +8,6 @@ class LocalStorageService {
     }
 
     addCustomComponent(customComponent) {
-        console.log(customComponent)
         const customComponents = this.getCustomComponents();
         customComponents.push(customComponent);
         this.setCustomComponents(customComponents);
@@ -59,14 +58,15 @@ var editor = grapesjs.init({
     layerManager: {
         appendTo: '.layers-container'
     },
-    storageManager: {
-        autosave: true, // Store data automatically
-        local: {
-            key: `gjsProject-${templateUId}`,
-            // If enabled, checks if browser supports LocalStorage
-            checkLocal: true,
-        },
-    },
+    storageManager: false,
+    // storageManager: {
+    //     autosave: true, // Store data automatically
+    //     local: {
+    //         key: `gjsProject-${templateUId}`,
+    //         // If enabled, checks if browser supports LocalStorage
+    //         checkLocal: true,
+    //     },
+    // },
     assetManager: {
         assets: images,
         upload: "https://appv4.zozo.vn/mjml-test/uploadTemplateAssets/" + templateUId,
@@ -110,7 +110,7 @@ var editor = grapesjs.init({
                 removeButtons: "",
                 "format_tags": "p;h1;h2;h3;h4;h5;h6;pre",
                 startupFocus: true,
-                extraAllowedContent: '*{*}', // Allows any class and any inline style
+                extraAllowedContent: '*(*);*{*}', // Allows any class and any inline style
                 allowedContent: true, // Disable auto-formatting, class removing, etc.
                 enterMode: CKEDITOR.ENTER_BR,
                 extraPlugins: 'emoji,colorbutton,colordialog,dialogadvtab,hkemoji,liststyle,ematags',
@@ -175,7 +175,6 @@ CKEDITOR.plugins.add('ematags',
             // End of richCombo element
         } //Init
     });
-
 
 
 // lấy ảnh trong template,campaign hoặc automation
