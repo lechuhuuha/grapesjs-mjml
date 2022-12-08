@@ -64,7 +64,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       ...coreMjmlView,
       tagName: 'table',
       attributes: {
-        // style: '',
+        style: 'float: none; display: inline-table;',
       },
 
       getMjmlTemplate() {

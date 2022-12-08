@@ -84,6 +84,7 @@ var editor = grapesjs.init({
     // When `avoidInlineStyle` is true all styles are inserted inside the css rule
     // @deprecated Don't use this option, we don't support inline styling anymore
     avoidInlineStyle: false,
+    forceClass: 0,
 
     // Show paddings and margins
     showOffsets: true,
@@ -92,7 +93,7 @@ var editor = grapesjs.init({
     showOffsetsSelected: true,
 
     // Height for the editor container
-    height: '700px',
+    height: '800px',
 
     plugins: ['grapesjs-mjml',
         'gjs-plugin-ckeditor'
@@ -194,7 +195,7 @@ fetch('https://appv4.zozo.vn/mjml-test/returnEmailContent/' + templateUId)
         return response.text();
     }
     ).then((text) => {
-        editor.setComponents(text)
+        editor.setComponents(JSON.parse(text))
     }).catch((error) => {
         console.log(error)
     });
@@ -468,12 +469,11 @@ editor.Panels.addButton('options', [{
 },]);
 
 function saveEditor() {
-    var mjml = editor.runCommand('mjml-code')
     var content = editor.runCommand('mjml-code-to-html').html
     fetch("https://appv4.zozo.vn/mjml-test/" + templateUId + "/builder/edit", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "content": content, "mjml": mjml })
+        body: JSON.stringify({ "content": content, "mjml": editor.getComponents() })
     }).then(res => {
         var modalSuccess = editor.Modal;
         modalSuccess.open({
