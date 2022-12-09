@@ -19,10 +19,11 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         draggable: componentsToQuery([typeBody, typeWrapper]),
         droppable: componentsToQuery([typeColumn, typeGroup]),
         'style-default': {
-          'padding-left': '0px',
-          'padding-right': '0px',
-          'padding-top': '10px',
-          'padding-bottom': '10px',
+          'padding': '10px 0px 10px 0px',
+          // 'padding-left': '0px',
+          // 'padding-right': '0px',
+          // 'padding-top': '10px',
+          // 'padding-bottom': '10px',
           'text-align': 'center',
         },
         stylable: [
