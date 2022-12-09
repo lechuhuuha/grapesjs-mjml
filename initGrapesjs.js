@@ -195,7 +195,12 @@ fetch('https://appv4.zozo.vn/mjml-test/returnEmailContent/' + templateUId)
         return response.text();
     }
     ).then((text) => {
-        editor.setComponents(JSON.parse(text))
+        try {
+            editor.setComponents(JSON.parse(text))
+        } catch (error) {
+            editor.setComponents((text))
+
+        }
     }).catch((error) => {
         console.log(error)
     });

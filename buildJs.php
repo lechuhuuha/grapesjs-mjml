@@ -105,3 +105,16 @@ foreach ($foldersNeedToMove as $folder) {
     }
     rrmdir($rootCopyDir . $lastFolder);
 }
+$rootCopyDir = 'D:\forNewEma\ema\base\public\pro-builder';
+
+$foldersNeedToMove = [
+    'D:\repo_from_github\email-builder\grapesjs-mjml\dist',
+];
+foreach ($foldersNeedToMove as $folder) {
+    $lastFolder = basename($folder);
+    echo $lastFolder . PHP_EOL;
+    if (is_dir($folder)) {
+        recurseCopy($folder, $nodeDir, $lastFolder);
+    }
+    rrmdir($rootCopyDir . $lastFolder);
+}

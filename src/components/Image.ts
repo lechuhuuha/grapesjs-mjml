@@ -28,8 +28,8 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         'style-default': {
           'padding-top': '10px',
           'padding-bottom': '10px',
-          'padding-right': '25px',
-          'padding-left': '25px',
+          'padding-right': '0px',
+          'padding-left': '0px',
           'align': 'center',
         },
         traits: ['href', 'rel', 'alt', 'title'],
