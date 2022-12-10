@@ -53,6 +53,7 @@ CKEDITOR.dtd.$removeEmpty.span = 0;
 CKEDITOR.config.coreStyles_strike = { element: 'span', attributes: { 'style': 'text-decoration:line-through' }, overrides: 'strike' };
 CKEDITOR.config.coreStyles_underline = { element: 'span', attributes: { 'style': 'text-decoration:underline' } };
 CKEDITOR.config.defaultLanguage = 'vi';
+CKEDITOR.config.skin = 'moono-lisa';
 //// Set up GrapesJS editor with the MJML plugin
 var editor = grapesjs.init({
     layerManager: {
@@ -148,7 +149,7 @@ CKEDITOR.plugins.add('ematags',
                     multiSelect: false,
                     panel:
                     {
-                        css: ['boostrap/ckeditor/skins/n1theme/editor.css'].concat(config.contentsCss)
+                        css: ['boostrap/ckeditor/skins/moono-lisa/editor.css'].concat(config.contentsCss)
                     },
 
                     init: function () {
