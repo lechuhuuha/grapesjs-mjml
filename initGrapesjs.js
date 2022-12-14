@@ -54,6 +54,7 @@ CKEDITOR.config.coreStyles_strike = { element: 'span', attributes: { 'style': 't
 CKEDITOR.config.coreStyles_underline = { element: 'span', attributes: { 'style': 'text-decoration:underline' } };
 CKEDITOR.config.defaultLanguage = 'vi';
 CKEDITOR.config.skin = 'moono-lisa';
+CKEDITOR.config.removePlugins = 'exportpdf';
 //// Set up GrapesJS editor with the MJML plugin
 var editor = grapesjs.init({
     layerManager: {
@@ -63,7 +64,7 @@ var editor = grapesjs.init({
     // storageManager: {
     //     autosave: true, // Store data automatically
     //     local: {
-    //         key: `gjsProject-${templateUId}`,
+    //         key: `gjsProject`,
     //         // If enabled, checks if browser supports LocalStorage
     //         checkLocal: true,
     //     },
@@ -85,7 +86,7 @@ var editor = grapesjs.init({
     // When `avoidInlineStyle` is true all styles are inserted inside the css rule
     // @deprecated Don't use this option, we don't support inline styling anymore
     avoidInlineStyle: false,
-    forceClass: 0,
+    // forceClass: 0,
 
     // Show paddings and margins
     showOffsets: true,
@@ -94,7 +95,7 @@ var editor = grapesjs.init({
     showOffsetsSelected: true,
 
     // Height for the editor container
-    height: '800px',
+    height: '100vh',
 
     plugins: ['grapesjs-mjml',
         'gjs-plugin-ckeditor'
@@ -169,8 +170,8 @@ CKEDITOR.plugins.add('ematags',
                     },
                     onClick: function (value) {
                         editor.focus();
-                        editor.fire('saveSnapshot');
-                        editor.insertHtml(value);
+                        // editor.fire('saveSnapshot');
+                        editor.insertText(value);
                         editor.fire('saveSnapshot');
                     }
                 });
@@ -197,8 +198,9 @@ fetch('https://appv4.zozo.vn/mjml-test/returnEmailContent/' + templateUId)
     }
     ).then((text) => {
         try {
-            editor.setComponents(JSON.parse(text))
+            editor.setComponents(JSON.parse(text.replace(/null/g, '\"\"')))
         } catch (error) {
+            console.log(error)
             editor.setComponents((text))
 
         }
@@ -219,13 +221,27 @@ storageComponents.forEach(element => {
 //// Section for fix bug in plugin ckeditor grapesjs
 
 // fix the bug where ckeditor toolbar cover the whole block
-CKEDITOR.on('instanceReady', function (e) {
+CKEDITOR.on('instanceReady', function (ckeditorEvent) {
     editor.RichTextEditor.updatePosition();
-    editor.on("rte:enable", () => {
-        (editor.trigger('frame:scroll'));
-    });
-});
 
+    // right now the bug when copy paste into navbar link make a tag duplicate
+    // dont know how to fix so just leave its here and warn user about its
+    var ckeditorLink = ckeditorEvent.editor
+    var mjComponent = editor.getSelected();
+    if (mjComponent.attributes.tagName == "mj-navbar-link") {
+        var iframeBody = editor.Canvas.getBody();
+        $(iframeBody).on("paste", '[contenteditable=true]', function (e) {
+            e.preventDefault();
+            var text = e.originalEvent.clipboardData.getData('text/plain');
+            // e.target.ownerDocument.execCommand("insertHTML", false, stripHTML(text));
+            ckeditorLink.focus();
+            ckeditorLink.insertText(stripHTML(text))
+        });
+    }
+});
+editor.on("rte:enable", () => {
+    (editor.trigger('frame:scroll'));
+});
 
 function overrideCustomRteDisable() {
     const richTextEditor = editor.RichTextEditor;
@@ -252,20 +268,28 @@ overrideCustomRteDisable()
 
 
 // remove all format when user paste text to avoid error when editing
-var iframeBody = editor.Canvas.getBody();
-$(iframeBody).on("paste", '[contenteditable="true"]', function (e) {
-    e.preventDefault();
-    var text = e.originalEvent.clipboardData.getData('text');
-    e.target.ownerDocument.execCommand("insertText", false, text);
-});
+// now its not working
+// var iframeBody = editor.Canvas.getBody();
+// $(iframeBody).on("paste", '[contenteditable="true"]', function (e) {
+//     e.preventDefault();
+//     var text = e.originalEvent.clipboardData.getData('text/plain');
+//     e.target.ownerDocument.execCommand("insertHtml", false, stripHTML(text));
+// });
 
-
+function stripHTML(text) {
+    var re = /<\S[^><]*>/g
+    // for (i = 0; i < text.length; i++)
+    //     text[i].value = text[i].value.replace(re, "")
+    text.replace(re, "")
+    return text.trim()
+}
 // fix the bug where ckeditor not update position when user hit enter
-CKEDITOR.on('instanceCreated', function (e) {
-    e.editor.on('change', function (event) {
-        (editor.trigger('frame:scroll'));
-    });
-});
+// some how this not working
+// CKEDITOR.on('instanceCreated', function (e) {
+//     e.editor.on('change', function (event) {
+//         (editor.trigger('frame:scroll'));
+//     });
+// });
 
 // CKEDITOR.on('change', function () {
 //     const data = editor.storeData()
@@ -314,6 +338,25 @@ editor.on('component:selected', (component) => {
 
     }
 });
+
+// editor.on('component:add', (component) => {
+//     // to prevent 'columnizable' default
+//     switch (component.get('type')) {
+//         case 'mj-navbar-link':
+//             needRefresh = true;
+//             break;
+//         default:
+//         //nothing
+//     }
+// });
+
+// editor.on('update', () => {
+//     // to prevent 'columnizable' elements render default
+//     if (needRefresh) {
+//         editor.setComponents(editor.getHtml());
+//         needRefresh = false;
+//     }
+// });
 
 function saveComponent(selectedComponent, mjml) {
     const modal = editor.Modal;
@@ -476,10 +519,12 @@ editor.Panels.addButton('options', [{
 
 function saveEditor() {
     var content = editor.runCommand('mjml-code-to-html').html
+    // console.log(JSON.stringify({ "content": content, "mjml": editor.getComponents() }).replace(/null/g, '\"\"'))
+    // return
     fetch("https://appv4.zozo.vn/mjml-test/" + templateUId + "/builder/edit", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "content": content, "mjml": editor.getComponents() })
+        body: JSON.stringify({ "content": content, "mjml": editor.getComponents() }).replace(/null/g, '\"\"')
     }).then(res => {
         var modalSuccess = editor.Modal;
         modalSuccess.open({

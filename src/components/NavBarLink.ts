@@ -19,11 +19,11 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           'font-style', 'font-size', 'font-weight', 'font-family', 'color',
           'text-decoration', 'text-transform',
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
-          'letter-spacing','line-height'
+          'letter-spacing', 'line-height'
         ],
         'style-default': {
           'font-size': '13px',
-          'padding' : '25px 10px',
+          'padding': '25px 10px',
           // 'padding-top': '25px',
           // 'padding-bottom': '25px',
           // 'padding-left': '10px',
@@ -64,7 +64,10 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       },
 
       getChildrenSelector() {
-        return 'a,p';
+        return 'div.mj-inline-links > a.mj-link';
+      },
+      rerender() {
+        this.render();
       },
     },
   });

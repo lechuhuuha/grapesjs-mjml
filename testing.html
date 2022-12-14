@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="jquery/index.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div>
+      RICH TEXT EDITOR
+      <input
+        type="button"
+        style="cursor: pointer; width: 120px"
+        onclick="startCleaning('editor');"
+        value="Clean HTML"
+      />
+    </div>
+    <div
+      id="editor"
+      style="
+        border: 1px solid gray;
+        width: 550px;
+        height: 180px;
+        overflow: auto;
+        background-color: #ffffff;
+      "
+      contenteditable="true"
+    >
+      <div
+        style="
+          color: #d4d4d4;
+          font-family: Consolas, 'Courier New', monospace;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 19px;
+          white-space: pre;
+        "
+      >
+        <div>
+          <div
+            style="
+              color: #d4d4d4;
+              font-family: Consolas, 'Courier New', monospace;
+              font-weight: normal;
+              font-size: 14px;
+              line-height: 19px;
+              white-space: pre;
+            "
+          >
+            <div><span style="color: #6a9955">querySelector('div')</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>UNDERLYING HTML</div>
+    <div
+      id="html"
+      style="
+        border: 1px solid gray;
+        width: 550px;
+        height: 180px;
+        overflow: auto;
+        background-color: #ffffff;
+      "
+    >
+      <xmp
+        style="
+          white-space: pre-line;
+        "><div style="color: #d4d4d4;background-color: #1e1e1e;font-family: Consolas, 'Courier New', monospace;font-weight: normal;font-size: 14px;line-height: 19px;white-space: pre;"><div><div style="color: #d4d4d4;background-color: #1e1e1e;font-family: Consolas, 'Courier New', monospace;font-weight: normal;font-size: 14px;line-height: 19px;white-space: pre;"><div><span style="color: #6a9955;">querySelector('div')</span></div></div></div></div></xmp>
+    </div>
+    <script>
+      var someError = false;
+      var tagsAllowed = "|";
+      var emptyTagsAllowed = "";
+
+
+      //Extension for getting the tagName
+      $.fn.tagName = function () {
+        if (!this.get(0).tagName) return "";
+        return this.get(0).tagName.toLowerCase();
+      };
+
+      function clearUnsupportedTagsAndAttributes(obj) {
+        $(obj)
+          .children()
+          .each(function () {
+            //recursively down the tree
+            var el = $(this);
+            clearUnsupportedTagsAndAttributes(el);
+            try {
+              var tag = el.tagName();
+              if (tagsAllowed.indexOf("|" + tag + "|") < 0) {
+                if (tag == "style" || tag == "script") el.remove();
+                else el.replaceWith(el.html());
+              } else {
+                if (
+                  el.html().replace(/^\s+|\s+$/g, "") == "" &&
+                  emptyTagsAllowed.indexOf("|" + tag + "|") < 0
+                )
+                  el.remove();
+                else {
+                  var attrs = el.get(0).attributes;
+                  for (var i = 0; i < attrs.length; i++) {
+                    try {
+                      if (
+                        attributesAllowed[tag] == null ||
+                        attributesAllowed[tag].indexOf(
+                          "|" + attrs[i].name.toLowerCase() + "|"
+                        ) < 0
+                      ) {
+                        el.removeAttr(attrs[i].name);
+                      }
+                    } catch (e) {} //Fix for IE, catch unsupported attributes like contenteditable and dataFormatAs
+                  }
+                }
+              }
+            } catch (e) {
+              someError = true;
+            }
+          });
+      }
+
+      //Extension for removing comments
+      $.fn.removeComments = function () {
+        this.each(function (i, objNode) {
+          var objChildNode = objNode.firstChild;
+          while (objChildNode) {
+            if (objChildNode.nodeType === 8) {
+              var next = objChildNode.nextSibling;
+              objNode.removeChild(objChildNode);
+              objChildNode = next;
+            } else {
+              if (objChildNode.nodeType === 1) {
+                //recursively down the tree
+                $(objChildNode).removeComments();
+              }
+              objChildNode = objChildNode.nextSibling;
+            }
+          }
+        });
+      };
+      function startCleaning(id) {
+        someError = false;
+        $("#" + id).removeComments();
+        clearUnsupportedTagsAndAttributes($("#" + id));
+        if (someError)
+          alert("An error occurred, perhaps not well formatted html.");
+        updateHtml = true;
+        showHtml();
+      }
+
+      var updateHtml = true;
+
+      function showHtml() {
+        if (updateHtml) {
+          $("#html").html(
+            "<xmp style='white-space: pre-line;'>" +
+              $("#editor").html() +
+              "</xmp>"
+          );
+          var length =
+            $("#editor").html() == null ? 0 : $("#editor").html().length;
+          $("#count").text(
+            "Number of characters in underlying html: " + length
+          );
+          setTimeout("showHtml()", 500);
+        }
+      }
+
+      $(document).ready(function () {
+        showHtml();
+        $("#html").on("mouseenter", function () {
+          updateHtml = false;
+        });
+        $("#editor").on("click", function () {
+          if (!updateHtml) {
+            updateHtml = true;
+            setTimeout("showHtml()", 500);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

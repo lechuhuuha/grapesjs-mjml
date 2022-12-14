@@ -16,6 +16,15 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         name: getName(editor, 'wrapper'),
         draggable: componentsToQuery(typeBody),
         droppable: componentsToQuery(typeSection),
+        'style-default': {
+          'padding': '20px 0',
+        },
+        stylable: [
+          'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
+          'background-color', 'background-url', 'background-repeat', 'background-size',
+          'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
+          'border', 'border-width', 'border-style', 'border-color'
+        ],
         traits: [
           'id',
           'title',
@@ -42,9 +51,13 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       },
 
       getChildrenSelector() {
-        if (this.model.getAttributes()['full-width']) {
+        if (this.model.getAttributes()['full-width'] && this.model.getAttributes()['background-url']) {
+          return 'table > tbody > tr > td > div > div > table > tbody > tr > td';
+        } else if (this.model.getAttributes()['full-width']) {
           return 'table > tbody > tr > td > div > table > tbody > tr > td';
-        } else
+
+        }
+        else
           return 'table > tbody > tr > td';
       },
 
