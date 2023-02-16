@@ -29,8 +29,10 @@
   "dependencies": {
     "ckeditor": "^4.12.1",
     "ckeditor4": "^4.20.0",
+    "context-menu": "^2.0.0",
     "grapesjs-plugin-ckeditor": "^0.0.10",
-    "mjml-browser": "^4.13.0"
+    "mjml-browser": "^4.13.0",
+    "vanilla-context-menu": "^1.4.2"
   },
   "devDependencies": {
     "eslint": "^8.23.0",

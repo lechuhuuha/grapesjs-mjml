@@ -6,7 +6,7 @@ import { type as typeHero } from './Hero';
 
 export const type = 'mj-button';
 
-export default (editor:  grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
+export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
   editor.Components.addType(type, {
     isComponent: isComponentType(type),
     extend: 'link',
@@ -17,13 +17,14 @@ export default (editor:  grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) 
         draggable: componentsToQuery([typeColumn, typeHero]),
         highlightable: false,
         stylable: ['width', 'height',
-          'background-color', 'container-background-color',
+          'background-color',
           'font-style', 'font-size', 'font-weight', 'font-family', 'color',
           'text-decoration', 'align',
           'vertical-align', 'text-transform',
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
-          'border', 'border-width', 'border-style', 'border-color',],
+          'border', 'border-width', 'border-style', 'border-color',
+          'line-height'],
         'style-default': {
           'background-color': '#414141',
           'border-radius': '3px',
@@ -32,6 +33,7 @@ export default (editor:  grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) 
           'color': '#ffffff',
           'vertical-align': 'middle',
           'padding': '10px 25px',
+          'line-height': '120%',
           // 'padding-top': '10px',
           // 'padding-bottom': '10px',
           // 'padding-right': '25px',
@@ -39,7 +41,7 @@ export default (editor:  grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) 
           'align': 'center',
         },
         traits: ['href'],
-        // 'container-background-color', 'inner-padding'
+        // 'inner-padding'
       },
     },
 
@@ -68,7 +70,7 @@ export default (editor:  grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) 
       /**
        * Prevent content repeating
        */
-       rerender() {
+      rerender() {
         this.render();
       },
     },

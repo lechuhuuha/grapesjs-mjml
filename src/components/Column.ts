@@ -20,9 +20,12 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'border', 'border-width', 'border-style', 'border-color',
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
+          'inner-background-color',
+          'inner-border-radius',
         ],
         'style-default': {
-          'vertical-align': 'top'
+          'vertical-align': 'top',
+          'padding': "10px 0 10px 0"
         }
       },
     },
@@ -76,6 +79,16 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
         this.renderAttributes();
         const mjmlResult = this.getTemplateFromMjml();
         this.el.innerHTML = mjmlResult.content;
+        //   this.el.innerHTML += `<div style="text-align: center">
+        //   <br />
+        //   <img
+        //     src="https://via.placeholder.com/350x250/78c5d6/fff"
+        //     alt="ZOZOEMA"
+        //     class="default-badge"
+        //     width="100%"
+        //   />
+        // </div>
+        // `;
         this.$el.attr(mjmlResult.attributes);
         editor.addComponents(`<style>${mjmlResult.style}</style>`);
         this.getChildrenContainer().innerHTML = this.model.get('content');
@@ -113,7 +126,7 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
       },
 
       getChildrenSelector() {
-        return 'table';
+        return 'table > tbody > tr > td > table';
       },
     },
   });

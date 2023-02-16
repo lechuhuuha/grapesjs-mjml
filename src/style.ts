@@ -23,6 +23,7 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
         }, {
           property: 'padding',
           detached: false,
+          defaults: "0 0 0 0",
           properties: [
             { name: 'Top', property: 'padding-top' },
             { name: 'Right', property: 'padding-right' },
@@ -54,7 +55,39 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
         open: false,
         buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-align', 'align', 'text-decoration', 'font-style'],
         properties: [
-          { name: 'Font', property: 'font-family' },
+          {
+            name: 'Font',
+            property: 'font-family',
+            list: [
+              { name: 'Times New Roman', value: 'Times New Roman, Times, serif' },
+              { name: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+              { name: 'Helvetica', value: 'Helvetica, sans-serif' },
+              { name: 'Courier New', value: 'Courier New, Courier, monospace' },
+              { name: 'Georgia', value: 'Georgia, serif' },
+              { name: 'Century Gothic', value: 'Century Gothic' },
+              { name: 'Garamond', value: 'Garamond' },
+              { name: 'Impact', value: 'Impact, Charcoal, sans-serif' },
+              { name: 'Lucida', value: 'Lucida Sans Unicode, Lucida Grande, sans-serif' },
+              { name: 'Tahoma', value: 'Tahoma, Geneva, sans-serif' },
+              { name: 'Trebuchet MS', value: 'Trebuchet MS, Helvetica, sans-serif' },
+              { name: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+            ],
+            options: [
+              // @notes: email-font only
+              { name: 'Times New Roman', value: 'Times New Roman, Times, serif' },
+              { name: 'Arial', value: 'Arial, Helvetica, sans-serif' },
+              { name: 'Helvetica', value: 'Helvetica, sans-serif' },
+              { name: 'Courier New', value: 'Courier New, Courier, monospace' },
+              { name: 'Georgia', value: 'Georgia, serif' },
+              { name: 'Century Gothic', value: 'Century Gothic' },
+              { name: 'Garamond', value: 'Garamond' },
+              { name: 'Impact', value: 'Impact, Charcoal, sans-serif' },
+              { name: 'Lucida', value: 'Lucida Sans Unicode, Lucida Grande, sans-serif' },
+              { name: 'Tahoma', value: 'Tahoma, Geneva, sans-serif' },
+              { name: 'Trebuchet MS', value: 'Trebuchet MS, Helvetica, sans-serif' },
+              { name: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+            ]
+          },
           { name: 'Weight', property: 'font-weight' },
           { name: 'Font color', property: 'color' },
           {
@@ -91,6 +124,8 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
             type: 'select',
             list: [
               { value: '' },
+              { value: 'uppercase' },
+              { value: 'lowercase' },
               { value: 'capitalize' },
             ]
           },
@@ -107,7 +142,7 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
         name: 'Decorations',
         open: false,
         buildProps: ['background-color', 'container-background-color', 'background-url', 'background-repeat',
-          'background-size', 'border-radius', 'border'],
+          'background-size', 'border-radius', 'border', 'background-width'],
         properties: [{
           name: 'Background color',
           property: 'container-background-color',
@@ -115,10 +150,45 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
         }, {
           property: 'background-url',
           type: 'file',
+        },
+        {
+          name: 'Background color',
+          property: 'inner-background-color',
+          type: 'color',
         }, {
+          name: 'Border radius',
+          property: 'inner-border-radius',
+          type: 'integer',
+          defaults: '0px',
+          units: ['px', '%']
+        },
+        {
+          name: 'Background position',
+
+          property: 'background-position',
+          type: 'select',
+          list: [
+            { value: 'top center' },
+            { value: 'top left' },
+            { value: 'top right' },
+            { value: 'center left' },
+            { value: 'center center' },
+            { value: 'center right' },
+            { value: 'bottom left' },
+            { value: 'bottom center' },
+            { value: 'bottom right' },
+          ]
+        },
+        {
           property: 'border-radius',
           type: 'integer',
           defaults: '0px',
+          units: ['px', '%']
+        },
+        {
+          property: 'background-width',
+          type: 'integer',
+          defaults: '600px',
           units: ['px', '%']
         }, {
           property: 'border-detached',

@@ -26,7 +26,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           'container-background-color', 'align',
         ],
         'style-default': {
-          'padding': '10px 0px 10px 0px',
+          'padding': '0px 0px 0px 0px',
           // 'padding-top': '10px',
           // 'padding-bottom': '10px',
           // 'padding-right': '0px',

@@ -1,4 +1,7 @@
 <?php
+// build the ckeditor 
+shell_exec("cd \"D:\\repo_from_github\ckeditor\\\" && php buildJs.php");
+
 // Function to Copy folders and files       
 
 function rrmdir($dir)
@@ -119,3 +122,5 @@ foreach ($foldersNeedToMove as $folder) {
     }
     // rrmdir($rootCopyDir . $lastFolder);
 }
+
+

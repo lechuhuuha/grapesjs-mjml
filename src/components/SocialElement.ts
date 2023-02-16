@@ -8,25 +8,26 @@ export const type = 'mj-social-element';
 export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
   editor.Components.addType(type, {
     isComponent: isComponentType(type),
+    // choose image working so just extend its
+    extend: 'image',
 
     model: {
       ...coreMjmlModel,
       defaults: {
+        // void: false,
+        resizable: false,
         name: getName(editor, 'socialElement'),
         draggable: componentsToQuery(typeSocial),
         stylable: [
-          'icon-size', 'text-decoration', 'align', 'font-family', 'font-size', 'line-height',
-          // padding not working properly with mode verital so i remove its and let social handle
+          'icon-size', 'align',
+          // padding not working properly with mode verital so i remove its and let social.ts handle
           // 'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'background-color',
-          'color',
           'vertical-align'
         ],
         'style-default': {
           'align': 'center',
-          'font-size': '13px',
-          'line-height': '22px',
           'vertical-align': 'middle',
         },
         traits: [

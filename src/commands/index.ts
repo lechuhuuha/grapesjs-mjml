@@ -11,6 +11,7 @@ export const cmdImportMjml = 'mjml-import';
 export const cmdExportMjml = 'mjml-export';
 export const cmdGetMjml = 'mjml-code';
 export const cmdGetMjmlToHtml = 'mjml-code-to-html';
+export const cmdConvertMjmlToHtml = 'ema-mjml-to-html';
 
 export default (editor: grapesjs.Editor, opts: RequiredPluginOptions) => {
   const { Commands } = editor;
@@ -24,7 +25,9 @@ export default (editor: grapesjs.Editor, opts: RequiredPluginOptions) => {
       const mjml = Commands.run(cmdGetMjml);
       return mjmlConvert(mjml, opts.fonts, opt);
   });
-
+  Commands.add(cmdConvertMjmlToHtml, (ed, _, opt: Record<string, any> = {}) => {
+    return mjmlConvert(opt.mjmlCode, opts.fonts, opt);
+  });
   openExportMjml(editor, opts, cmdOpenExport);
   openImportMjml(editor, opts, cmdImportMjml);
 

@@ -130,7 +130,17 @@ const plugin: grapesjs.Plugin<PluginOptions> = (editor, opt = {}) => {
     ],
     block: () => ({}),
     codeViewerTheme: 'hopscotch',
-    importPlaceholder: '',
+    importPlaceholder: `<mjml>
+    <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Times New Roman">
+      </mj-all>
+    </mj-attributes>
+  </mj-head>
+    <mj-body>
+      
+    </mj-body>
+  </mjml>`,
     imagePlaceholderSrc: '',
     overwriteExport: true,
     preMjml: '',

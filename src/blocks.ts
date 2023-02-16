@@ -93,17 +93,17 @@ export default (editor: grapesjs.Editor, opts: RequiredPluginOptions) => {
   addBlock('mj-social-group', {
     label: getI18nLabel('socialGroup'),
     media: socialIcon,
-    content: `<mj-social font-size="12px" icon-size="24px" border-radius="12px" mode="horizontal">
-        <mj-social-element name="facebook"></mj-social-element>
-        <mj-social-element name="google"></mj-social-element>
-        <mj-social-element name="twitter"></mj-social-element>
+    content: `<mj-social font-size="12px" icon-size="24px" mode="horizontal">
+        <mj-social-element name="custom" src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png'></mj-social-element>
+        <mj-social-element name="custom" src='https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png'></mj-social-element>
+        <mj-social-element name="custom" src='https://w7.pngwing.com/pngs/3/643/png-transparent-tiktok-brands-icon-thumbnail.png'></mj-social-element>
       </mj-social>`,
   });
 
   addBlock('mj-social-element', {
     label: getI18nLabel('socialElement'),
     media: socialIcon,
-    content: '<mj-social-element name="facebook" />',
+    content: `<mj-social-element name="custom" src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png'></mj-social-element>`,
   });
 
   addBlock('mj-spacer', {
@@ -132,7 +132,7 @@ export default (editor: grapesjs.Editor, opts: RequiredPluginOptions) => {
     media: `<svg viewBox="0 0 24 24">
         <path fill="currentColor" d="M21,15.61L19.59,17L14.58,12L19.59,7L21,8.39L17.44,12L21,15.61M3,6H16V8H3V6M3,13V11H13V13H3M3,18V16H16V18H3Z" />
     </svg>`,
-    content: `<mj-navbar-link>Link</mj-navbar-link>`,
+    content: `<mj-navbar-link>Link 1</mj-navbar-link>`,
   });
 
   addBlock('mj-hero', {
@@ -140,14 +140,29 @@ export default (editor: grapesjs.Editor, opts: RequiredPluginOptions) => {
     media: `<svg viewBox="0 0 24 24">
         <path fill="currentColor" d="M20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20M4,6V18H20V6H4M6,9H18V11H6V9M6,13H16V15H6V13Z" />
     </svg>`,
-    content: `<mj-hero mode="fixed-height" height="469px" background-width="600px" background-height="469px" background-url="https://cloud.githubusercontent.com/assets/1830348/15354890/1442159a-1cf0-11e6-92b1-b861dadf1750.jpg" background-color="#2a3448" padding="100px 0px">
-      <mj-text padding="20px" color="#ffffff" font-family="Helvetica" align="center" font-size="45px" line-height="45px" font-weight="900">
-        GO TO SPACE
-      </mj-text>
-      <mj-button href="https://mjml.io/" align="center">
-        ORDER YOUR TICKET NOW
-      </mj-button>
-    </mj-hero>`,
+    content: `<mj-hero
+    mode="fixed-height"
+    height="469px"
+    background-width="600px"
+    background-height="469px"
+    background-url=
+        "https://cloud.githubusercontent.com/assets/1830348/15354890/1442159a-1cf0-11e6-92b1-b861dadf1750.jpg"
+    background-color="#2a3448"
+    padding="100px 0px">
+    <mj-text
+      padding="20px"
+      color="#ffffff"
+      font-family="Helvetica"
+      align="center"
+      font-size="45px"
+      line-height="45px"
+      font-weight="900">
+      GO TO SPACE
+    </mj-text>
+    <mj-button href="https://mjml.io/" align="center">
+      ORDER YOUR TICKET NOW
+    </mj-button>
+  </mj-hero>`,
   });
 
   addBlock('mj-wrapper', {

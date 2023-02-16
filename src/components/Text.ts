@@ -31,7 +31,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           // 'padding-right': '25px',
           // 'padding-left': '25px',
           'font-size': '13px',
-          'line-height': '22px',
+          // 'line-height': '22px',
           'align': 'left',
         },
       },

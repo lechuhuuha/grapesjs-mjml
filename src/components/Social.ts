@@ -18,17 +18,15 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         draggable: componentsToQuery([typeColumn, typeHero]),
         droppable: componentsToQuery(typeSocialElement),
         stylable: [
-          'icon-size', 'text-decoration', 'align', 'font-family', 'font-size', 'line-height',
+          'icon-size', 'align',
           'padding', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
           'border-radius', 'border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius',
           'container-background-color',
-          'color', 'icon-padding',
+          'icon-padding',
         ],
         'style-default': {
           'align': 'center',
           'icon-size': '20px',
-          'font-size': '13px',
-          'line-height': '22px',
           'mode': 'horizontal'
         },
         //@note : when user need this i will comeback and review its bc right now mode not working for socialElement

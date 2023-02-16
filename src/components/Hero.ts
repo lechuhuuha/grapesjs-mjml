@@ -23,11 +23,13 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
         droppable: componentsToQuery([typeText, typeButton, typeImage, typeDivider, typeNavbar, typeSocial, typeSpacer]),
         stylable: [
           'background-color', 'background-height', 'background-position', 'background-url',
-          'background-width', 'css-class', 'height', 'mode', 'padding', 'padding-top',
-          'padding-left', 'padding-right', 'padding-bottom', 'vertical-align', 'width'
+           'css-class', 'height', 'mode', 'padding', 'padding-top',
+          'padding-left', 'padding-right', 'padding-bottom', 'vertical-align'
+          // background-width not working in mjml 
         ],
         'style-default': {
-          'vertical-align': 'top'
+          'vertical-align': 'top',
+          'background-position': 'center center'
         }
       },
     },
