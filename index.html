@@ -23,6 +23,13 @@
     <!-- For ckeditor -->
 
     <script src="jquery/index.js" type="text/javascript"></script>
+
+    <script src="boostrap/domToImage/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"
+    />
     <style>
       .gjs-editor-cont {
         height: 100vh !important;
@@ -114,6 +121,51 @@
       /* .cke_dialog_background_cover {
         display: none !important;
       } */
+      .gjs-pn-views .gjs-pn-btn {
+        width: 50%;
+      }
+      .bcaEdL {
+        display: flex;
+        -moz-box-pack: center;
+        justify-content: center;
+        -moz-box-align: center;
+        align-items: center;
+        margin: 25px 0px 25px;
+      }
+      .bRfjST {
+        margin-left: 12px;
+        text-align: left;
+        letter-spacing: 0.3px;
+        line-height: 1.1em;
+      }
+
+      .tabs_save {
+        color: #ffffff !important;
+        background: #dc659b !important;
+      }
+      .tabs_delete,
+      .tabs_save,
+      .tabs_link {
+        outline: none;
+        cursor: pointer;
+        text-align: center;
+        padding: 10px 15px;
+        border: none;
+        border-bottom-color: currentcolor;
+        border-bottom-style: none;
+        border-bottom-width: medium;
+        border-bottom: 2px solid transparent;
+        -webkit-transition: color 0.25s, border-color 0.25s;
+        transition: color 0.25s, border-color 0.25s;
+        background: transparent;
+      }
+      .tabs_delete {
+        color: #ffffff;
+        background: #2e3037;
+      }
+      .cke_combopanel {
+        width: 221px !important;
+      }
     </style>
 
     <link rel="stylesheet" href="boostrap/min.css" />

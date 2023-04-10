@@ -1,6 +1,5 @@
 <?php
 // build the ckeditor 
-shell_exec("cd \"D:\\repo_from_github\ckeditor\\\" && php buildJs.php");
 
 // Function to Copy folders and files       
 
@@ -75,6 +74,7 @@ $foldersNeedToCopy = [
     'D:\repo_from_github\email-builder\grapesjs-mjml\locale',
     'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs',
     'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs-plugin-ckeditor',
+    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\moment',
     'D:\repo_from_github\email-builder\grapesjs-mjml\index.html',
     'D:\repo_from_github\email-builder\grapesjs-mjml\initGrapesjs.js'
 ];
@@ -99,6 +99,7 @@ if (!file_exists($nodeDir)) {
 $foldersNeedToMove = [
     'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs',
     'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs-plugin-ckeditor',
+    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\moment',
 ];
 foreach ($foldersNeedToMove as $folder) {
     $lastFolder = basename($folder);
@@ -124,3 +125,4 @@ foreach ($foldersNeedToMove as $folder) {
 }
 
 
+shell_exec("cd \"D:\\repo_from_github\ckeditor\\\" && php buildJs.php");

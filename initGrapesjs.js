@@ -65,7 +65,7 @@ CKEDITOR.config.coreStyles_underline = {
 };
 CKEDITOR.config.defaultLanguage = "vi";
 CKEDITOR.config.skin = "moono-lisa";
-CKEDITOR.config.removePlugins = "exportpdf";
+CKEDITOR.config.removePlugins = "exportpdf,magicline";
 //// Set up GrapesJS editor with the MJML plugin
 var editor = grapesjs.init({
   layerManager: {
@@ -85,7 +85,7 @@ var editor = grapesjs.init({
       // Pass an object with your properties
       {
         type: "image",
-        src: "https://i.picsum.photos/id/837/200/300.jpg?hmac=Gt-0oRZYfIeEmweMdDSOJI6o3pk0tZitt5LO1KsbLC4",
+        src: "https://picsum.photos/200/300",
         height: 500,
         width: 500,
         name: "displayName",
@@ -93,7 +93,7 @@ var editor = grapesjs.init({
       {
         // As the 'image' is the base type of assets, omitting it will
         // be set as `image` by default
-        src: "https://i.picsum.photos/id/327/200/200.jpg?hmac=-qY8ApRJQJVHwDBxBmp-qnzM8xmqT5aJwHUXxZy3RAM",
+        src: "https://picsum.photos/200",
         height: 500,
         width: 500,
         name: "displayName2",
@@ -130,6 +130,7 @@ var editor = grapesjs.init({
       i18n: {
         locale: "vi",
       },
+      imagePlaceholderSrc: "https://placehold.co/600x400",
     },
     "gjs-plugin-ckeditor": {
       position: "center",
@@ -144,24 +145,45 @@ var editor = grapesjs.init({
         allowedContent: true, // Disable auto-formatting, class removing, etc.
         enterMode: CKEDITOR.ENTER_BR,
         extraPlugins:
-          "emoji,colorbutton,colordialog,dialogadvtab,hkemoji,liststyle,simpleLink,ematags,pastetext,clipboard",
+          "emoji,colorbutton,colordialog,dialogadvtab,hkemoji,liststyle,simplelink,ematags,pastetext,clipboard,table,font",
         toolbar: [
-          ["Bold", "Italic", "Underline", "Strike"],
+          ["Bold", "Italic", "Underline", "Strike", "FontSize"],
           {
             name: "paragraph",
-            items: ["NumberedList", "BulletedList", "liststyle"],
+            items: ["NumberedList", "BulletedList"],
           },
-          { name: "links", items: ["simpleLink", "Unlink"] },
+          { name: "links", items: ["simplelink", "Unlink"] },
           { name: "colors", items: ["TextColor", "BGColor"] },
           // here why we need to call emoji its like this https://stackoverflow.com/questions/66364640/ckeditor-cant-install-emoji-plugin
           {
             name: "insert",
-            items: ["SpecialChar", "EmojiPanel", "HKemoji", "ematags"],
+            // @note : table dialog need to be max-width:100%;width:100%;
+            items: ["SpecialChar", "EmojiPanel", "HKemoji", "ematags", "Table"],
           },
         ],
       },
     },
   },
+});
+
+CKEDITOR.on("dialogDefinition", function (ev) {
+  // Take the dialog name and its definition from the event data.
+  var dialogName = ev.data.name;
+  var dialogDefinition = ev.data.definition;
+
+  // Check if the definition is from the dialog window you are interested in (the "Link" dialog window).
+  if (dialogName == "table") {
+    // Get a reference to the "Link Info" tab.
+    var advanced = dialogDefinition.getContents("advanced");
+    var infoTab = dialogDefinition.getContents("info");
+
+    // Set the default value for the URL field.
+    var advStyles = advanced.get("advStyles");
+    var txtWidth = infoTab.get("txtWidth");
+    console.log(txtWidth, advStyles);
+    advStyles["default"] = "max-width:100%; width:100%;";
+    txtWidth["default"] = "100%";
+  }
 });
 
 // add tags in template
@@ -174,6 +196,7 @@ CKEDITOR.plugins.add("ematags", {
     editor.ui.addRichCombo("ematags", {
       label: "Chèn Tags",
       title: "Chèn Tags",
+      className: "ematags",
       multiSelect: false,
       panel: {
         css: ["boostrap/ckeditor/skins/moono-lisa/editor.css"].concat(
@@ -244,7 +267,7 @@ editor.setComponents(`<mjml>
 <mj-body>
   <mj-section>
     <mj-column>
-      <mj-image src="https://via.placeholder.com/350x250/78c5d6/fff">
+      <mj-image src="https://placehold.co/600x400">
       </mj-image>
     </mj-column>
   </mj-section>
@@ -253,6 +276,60 @@ editor.setComponents(`<mjml>
 let storageS = new LocalStorageService();
 const storageComponents = storageS.getCustomComponents();
 storageComponents.forEach((element) => {
+  element.render = function ({ model, el }) {
+    el.addEventListener("click", () => {
+      const modal = editor.Modal;
+
+      const container = document.createElement("div");
+
+      const inputHtml = `<form id="custom-mjml">
+
+      <button class="tabs_delete" id="delete-btn" style="">
+        Delete
+      </button>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Tên Block</label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Enter name"
+          readonly
+        />
+      </div>
+    </form>    
+`;
+
+      modal.setTitle("Sửa block " + element.blockName);
+      container.innerHTML = inputHtml;
+      modal.setContent(container);
+      modal.open();
+      var componentName = document.querySelector("#exampleInputEmail1");
+      var componentForm = document.querySelector("#custom-mjml .form-group");
+      componentForm.insertAdjacentHTML("afterbegin", element.media);
+      componentName.value = element.blockName;
+
+      /**
+       * <button class="tabs_save" id="save-block-btn">
+        Save
+        </button>
+       */
+      // var saveBtn = document.querySelector("#save-block-btn");
+      // saveBtn.addEventListener("click", function (e) {
+      //   e.preventDefault();
+      //   console.log("saveed", componentName.value, element.blockId);
+      // });
+
+      var deleteBtn = document.querySelector("#delete-btn");
+      deleteBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        editor.BlockManager.remove(element.blockId);
+        storageS.removeCustomComponent(element);
+        modal.close();
+      });
+    });
+  };
   editor.BlockManager.add(element.blockId, element);
 });
 
@@ -274,6 +351,36 @@ editor.on("component:add", function (model) {
 
 // Run after the editor is laoded
 editor.on("load", (some, argument) => {
+  // remove setting panel and move its to sector
+  // https://github.com/GrapesJS/grapesjs/issues/2968
+  var pn = editor.Panels;
+
+  var openTmBtn = pn.getButton("views", "open-tm");
+  openTmBtn && openTmBtn.set("active", 1);
+  var openSm = pn.getButton("views", "open-sm");
+  openSm && openSm.set("active", 1);
+  // Remove trait view
+  pn.removeButton("views", "open-tm");
+
+  // Add Settings Sector
+  var traitsSector = $(
+    '<div class="gjs-sm-sector no-select">' +
+      '<div class="gjs-sm-sector-title"><span class="icon-settings fa fa-cog"></span> <span class="gjs-sm-sector-label">Settings</span></div>' +
+      '<div class="gjs-sm-properties" style="display: none;"></div></div>'
+  );
+  var traitsProps = traitsSector.find(".gjs-sm-properties");
+  traitsProps.append($(".gjs-trt-traits"));
+  $(".gjs-sm-sectors").before(traitsSector);
+  traitsSector.find(".gjs-sm-sector-title").on("click", function () {
+    var traitStyle = traitsProps.get(0).style;
+    var hidden = traitStyle.display == "none";
+    if (hidden) {
+      traitStyle.display = "block";
+    } else {
+      traitStyle.display = "none";
+    }
+  });
+
   var currentYear = new Date().getFullYear();
   const footer = `<div style="text-align: center;  user-select: none;">
   <br />
@@ -332,10 +439,10 @@ CKEDITOR.on("instanceReady", function (ckeditorEvent) {
     });
   }
 });
+
 editor.on("rte:enable", () => {
   editor.trigger("frame:scroll");
 });
-
 
 function overrideCustomRteDisable() {
   const richTextEditor = editor.RichTextEditor;
@@ -354,8 +461,8 @@ function overrideCustomRteDisable() {
         if (rte) {
           rte.destroy(true);
         }
-      }else{
-        CKEDITOR.dialog.getCurrent().hide()
+      } else {
+        CKEDITOR.dialog.getCurrent().hide();
       }
     };
   }
@@ -390,13 +497,27 @@ CKEDITOR.on("instanceCreated", function (e) {
   e.editor.on("change", function (event) {
     editor.trigger("frame:scroll");
   });
+  CKEDITOR.on("change", function (event) {
+    console.log(document.querySelectorAll("ul li span"));
+    document.querySelectorAll("ul li span").forEach(function (span) {
+      console.log(span);
+      var font_size = window
+        .getComputedStyle(span)
+        .getPropertyValue("font-size");
+      var bg_color = window
+        .getComputedStyle(span)
+        .getPropertyValue("background-color");
+      var color = window.getComputedStyle(span).getPropertyValue("color");
+      var font_family = window
+        .getComputedStyle(span)
+        .getPropertyValue("font-family");
+      span.parentElement.style.fontSize = font_size;
+      span.parentElement.style.backgroundColor = bg_color;
+      span.parentElement.style.color = color;
+      span.parentElement.style.fontFamily = font_family;
+    });
+  });
 });
-
-// CKEDITOR.on('change', function () {
-//     const data = editor.storeData()
-//     editor.DomComponents.clear()
-//     editor.loadData(data)
-// });
 
 //// Section for fix bug in plugin ckeditor grapesjs
 
@@ -439,7 +560,8 @@ editor.on("component:selected", (component) => {
 
     if (
       component.attributes.tagName != "mjml" &&
-      component.attributes.tagName != "body"
+      component.attributes.tagName != "body" &&
+      component.attributes.tagName != "mj-body"
     ) {
       if (component.attributes.tagName == "mj-text") {
         var modelSectors = editor.StyleManager.getSectors().models;
@@ -462,7 +584,6 @@ editor.on("component:selected", (component) => {
       const input = JSON.parse(start);
       const result = json2xml(input);
       //createBlockTemplate functionality
-      const commandBlockTemplateIcon = "gjs-toolbar-item fa fa-plus";
       const commandBlockTemplate = () => {
         saveComponent(component, result);
       };
@@ -476,7 +597,7 @@ editor.on("component:selected", (component) => {
           toolbar: [
             ...defaultToolbar,
             {
-              attributes: { class: commandBlockTemplateIcon },
+              label: `<svg fill="#ffffff" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m764.386 112.941 225.882 338.824H225.882v112.94H1920v1072.942c0 93.402-76.01 169.412-169.412 169.412H169.412C76.009 1807.059 0 1731.049 0 1637.647V112.941h764.386ZM1040 858.846H880v240H640v160h240v240h160v-240h240v-160h-240v-240Z" fill-rule="evenodd"></path> </g></svg>`,
               command: commandBlockTemplate,
             },
           ],
@@ -519,43 +640,85 @@ editor.on("component:selected", (component) => {
 //     }
 // });
 
-function saveComponent(selectedComponent, mjml) {
+function saveComponent(selectedComponent, mjmlUserSelect) {
   const modal = editor.Modal;
 
   const container = document.createElement("div");
 
-  const inputHtml = `
-    <form id="custom-mjml">  
-    <div class="form-group">
-      <img src="D:\\mail cho khach\\kho_thi\\test.png" width="100%" height="30%">
-      <label for="exampleInputEmail1">Tên Component</label>
-      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-        placeholder="Enter name">
-        <button class="gjs-btn-prim gjs-btn-import" type="submit">Submit</button>
+  const inputHtml = `<form id="custom-mjml">
+  <div class="form-group">
+    <img
+      style="width: 100%"
+      src=""
+      id="iframe-editor"
+      alt=""
+      crossorigin="anonymous"
+    />
+    <div type="tool" class="sc-dEZmip bcaEdL">
+      <i class="sc-hCSrFq hjtdxM">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="21"
+          height="22"
+          viewBox="0 0 21 22"
+        >
+          <image
+            width="21"
+            height="22"
+            xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUh
+    EUgAAABUAAAAWCAMAAAAYXScKAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA51BMVEV5kKH///95kKF5kKF5kKF5kKF
+    5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF
+    5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKF5kKE
+    AAADbuHBkAAAAS3RSTlMAAB7zTvRHJGqBcDEcD6T1r5Cn7r0gCcm0FgyN5L4DlLj2Kw3xKD7YrmfDmHroAsFbAd1VgC4RVxDIraV70AcU+hM51zpdNvD7eWnPB9GsAAAAAWJLR0RM928
+    Q8wAAAAlwSFlzAAALEgAACxIB0t1+/AAAAAd0SU1FB+IKDwkRKZsxmC0AAADOSURBVBjTdZHXFoIwDIZjqThQce+9t+LEvWff/30sRQo4/os05ztZTQC4CLMOTfCXIhtFOkUCtmRgAem
+    x2CkCuNwerwQgOrFRV/T5A3IwFI5EYz7R7BZPJFP0SWeyyDJDJpfXnULRpPFS+d2rUq1xWm/wEZotRgkhgNucdroOjWiSen2DDoa8gjIaw4SGhGAqz8wZ5lmV/Ti/mFi3s1wxut5srXS
+    3P2i0d7RvUiBMqp2eztSoRLHTxYWa6+3jFnOZ5t8f3xeCH3d70li3QV9eQhXKKkqZHwAAAABJRU5ErkJggg=="
+          ></image>
+        </svg>
+      </i>
+      <div class="sc-iaRkIM bRfjST">
+        <span
+          ><span
+            >Không muốn tạo lại block mỗi lần? Lưu block của bạn lại và sử dụng lại mỗi khi bạn tạo 1 template mới. Đi đến mục Blocks &gt;&gt; Custom blocks để tìm block đã lưu của bạn.</span
+          ></span
+        >
+      </div>
     </div>
-    </form>`;
+    <label for="exampleInputEmail1">Tên Block</label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      placeholder="Enter name"
+    />
+    <button class="gjs-btn-prim gjs-btn-import" type="submit">Submit</button>
+  </div>
+</form>
+`;
 
   modal.setTitle("Lưu component dùng lại");
   container.innerHTML = inputHtml;
   modal.setContent(container);
   modal.open();
+  var imageData;
+  html2canvas(
+    $(".gjs-frame")
+      .contents()
+      .find("#" + selectedComponent.view.el.id)[0],
+    {
+      // allowTaint: true,
+      useCORS: true,
+      logging: false,
+    }
+  ).then((canvas) => {
+    imageData = canvas.toDataURL();
+    $("#iframe-editor").attr("src", imageData);
+  });
 
   const form = document.getElementById("custom-mjml");
   form.addEventListener("submit", (event) => {
-    const mjmlTmpl = component.view.getMjmlTemplate();
-    var mjmlCode = `${mjmlTmpl.start}${result}${mjmlTmpl.end}`;
-    mjmlCode = editor.runCommand("ema-mjml-to-html", { mjmlCode: mjmlCode });
-
-    var htmlContent = [mjmlCode.html];
-    var bl = new Blob(htmlContent, { type: "text/html" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(bl);
-    a.download = "your-download-name-here.html";
-    a.hidden = true;
-    document.body.appendChild(a);
-    a.innerHTML =
-      "something random - nobody will see this, it doesn't matter what you put here";
-    a.click();
     // stop form submission
     event.preventDefault();
     var exampleInputEmail1 = document.getElementById("exampleInputEmail1");
@@ -564,23 +727,79 @@ function saveComponent(selectedComponent, mjml) {
 
     let blockId =
       "customBlockTemplate_" + "id" + Math.random().toString(16).slice(2);
-
     // save to local storage
+
     const storageService = new LocalStorageService();
     const customComponent = {
       blockId: blockId,
-      category: "Custom component",
+      blockName: blockName,
+      category: "Custom blocks",
       open: false,
-      label: `${blockName}`,
-      media:
-        '<i class="fa fa-bookmark" style="font-size: 40px;" aria-hidden="true"></i>',
-      content: mjml,
+      // label: `${blockName}`,
+      // media:
+      //   '<i class="fa fa-bookmark" style="font-size: 40px;" aria-hidden="true"></i>',
+      media: '<img style="width: 100%;" src="' + imageData + '"/>',
+      label:
+        '<div>\n<div class="my-label-block">' + blockName + "</div>\n</div>",
+      content: mjmlUserSelect,
     };
     storageService.addCustomComponent(customComponent);
+    customComponent.render = function ({ model, el }) {
+      el.addEventListener("click", () => {
+        const modal = editor.Modal;
 
+        const container = document.createElement("div");
+
+        const inputHtml = `<form id="custom-mjml">
+  
+        <button class="tabs_delete" id="delete-btn" style="">
+          Delete
+        </button>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Tên Block</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            placeholder="Enter name"
+            readonly
+          />
+        </div>
+      </form>    
+  `;
+
+        modal.setTitle("Sửa block " + customComponent.blockName);
+        container.innerHTML = inputHtml;
+        modal.setContent(container);
+        modal.open();
+        var componentName = document.querySelector("#exampleInputEmail1");
+        var componentForm = document.querySelector("#custom-mjml .form-group");
+        componentForm.insertAdjacentHTML("afterbegin", customComponent.media);
+        componentName.value = customComponent.blockName;
+
+        var deleteBtn = document.querySelector("#delete-btn");
+        deleteBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          editor.BlockManager.remove(customComponent.blockId);
+          storageS.removeCustomComponent(customComponent);
+          modal.close();
+        });
+      });
+    };
     // add to block manager
     editor.BlockManager.add(blockId, customComponent);
+
     modal.close();
+    editor.Panels.getButton("views", "open-blocks").set("active", true);
+    var categories = editor.BlockManager.getCategories();
+    categories.each((category) => {
+      if (category.id == "Custom blocks") {
+        category.set("open", true);
+      } else {
+        category.set("open", false);
+      }
+    });
   });
 }
 //// Section for grapesjs event
@@ -820,7 +1039,18 @@ editor.DomComponents.addType("orderSnippet", {
     },
   }),
 });
+const block_manager = editor.BlockManager;
 
+var srcTimer = "http://base.zema.de/email-countdown/preview.gif";
+
+block_manager.add("mj-timer", {
+  label: "Timer",
+  media: `<svg viewBox="0 0 24 24">
+<path fill="currentColor" d="M12 20C16.4 20 20 16.4 20 12S16.4 4 12 4 4 7.6 4 12 7.6 20 12 20M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2M17 11.5V13H11V7H12.5V11.5H17Z" />
+</svg>`,
+  content: `<mj-image data-timer="true" src="${srcTimer}"/>`,
+  activate: false,
+});
 // Sort blocks
 const categoryBlocks = {
   "Bố cục": [
@@ -842,6 +1072,7 @@ const categoryBlocks = {
     "mj-button",
     "mj-social-group",
     "mj-social-element",
+    "mj-timer",
     "mj-raw",
   ],
 };
@@ -856,7 +1087,6 @@ for (const [key, value] of Object.entries(categoryBlocks)) {
 }
 
 // add 4 columns block
-const block_manager = editor.BlockManager;
 
 block_manager.add("mj-4-columns", {
   category: "Bố cục",
@@ -905,6 +1135,16 @@ block_manager.add("mj-group", {
       </mj-column>
     </mj-group>
   </mj-section>`,
+});
+
+var categories = block_manager.getCategories();
+categories.each((category) => {
+  category.set("open", false).on("change:open", (opened) => {
+    opened.get("open") &&
+      categories.each((category) => {
+        category !== opened && category.set("open", false);
+      });
+  });
 });
 //// Section for grapesjs block manager
 

@@ -200,20 +200,12 @@ Install it
 $ npm i
 ```
 
-Start the dev server
+Build the lib
 
 ```sh
-$ npm start
+$ npm run build
 ```
 
-## Releasing
+Remember to build the ckeditor folder in boostrap\ckeditor for editor use ckeditor
 
-1) Run `npm run v:patch` to bump the version in package.json and create a git tag
-2) Push the commit + new tag
-3) Go to github and draft a new release
-4) Select the new tag and add some release notes
-5) Hit publish, the release will automatically publish to npm
-
-## License
-
-BSD 3-Clause
+Open by using file index.html

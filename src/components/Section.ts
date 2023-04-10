@@ -34,8 +34,8 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
           'border', 'border-width', 'border-style', 'border-color'
         ],
         traits: [
-          'id',
-          'title',
+          // 'id',
+          // 'title',
           {
             type: 'full-width',
             label: 'Full width',

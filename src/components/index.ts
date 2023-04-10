@@ -20,10 +20,12 @@ import loadNavBar from './NavBar';
 import loadNavBarLink from './NavBarLink';
 import loadHero from './Hero';
 import loadRaw from './Raw';
+import loadTimer from './Timer';
+import loadTimerColorTrait from '../timerColortraits';
 import { RequiredPluginOptions } from '..';
 
 export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
-  const { Components  } = editor;
+  const { Components } = editor;
   // @ts-ignore
   const ComponentsView = Components.ComponentsView;
   const sandboxEl = document.createElement('div');
@@ -300,6 +302,8 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
     loadNavBarLink,
     loadHero,
     loadRaw,
+    loadTimer,
+    loadTimerColorTrait
   ]
-  .forEach(module => module(editor, compOpts));
+    .forEach(module => module(editor, compOpts));
 };

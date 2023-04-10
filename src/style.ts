@@ -152,11 +152,11 @@ export default (editor: grapesjs.Editor, opt: RequiredPluginOptions) => {
           type: 'file',
         },
         {
-          name: 'Background color',
+          name: 'Inner Background color',
           property: 'inner-background-color',
           type: 'color',
         }, {
-          name: 'Border radius',
+          name: 'Inner Border radius',
           property: 'inner-border-radius',
           type: 'integer',
           defaults: '0px',
