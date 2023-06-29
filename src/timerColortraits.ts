@@ -1,5 +1,5 @@
-import type grapesjs from 'grapesjs';
-export default (editor: grapesjs.Editor, opt: any) => {
+import type { Editor } from 'grapesjs';
+export default (editor: Editor, opt: any) => {
     editor.TraitManager.addType('timer-color', {
 
         // eventCapture: ['change'], // you can use multiple events in the array
@@ -16,7 +16,7 @@ export default (editor: grapesjs.Editor, opt: any) => {
                 <div class="gjs-checker-bg"></div>
 
             </div>`;
-            el.id = attributesComponent;
+            el.id = attributesComponent!;
             const gjs_field_colorp_c = el.getElementsByClassName("gjs-field-colorp-c");
             const parentCustom = document.createElement('div');
             parentCustom.className = "gjs-field-color-picker";

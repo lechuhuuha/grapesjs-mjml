@@ -1,5 +1,5 @@
 // Specs: https://documentation.mjml.io/#mj-section
-import type grapesjs from 'grapesjs';
+import type { Editor } from 'grapesjs';
 import { componentsToQuery, getName, isComponentType } from './utils';
 import { type as typeBody } from './Body';
 import { type as typeWrapper } from './Wrapper';
@@ -8,7 +8,7 @@ import { type as typeGroup } from './Group';
 
 export const type = 'mj-section';
 
-export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
+export default (editor: Editor, { coreMjmlModel, coreMjmlView }: any) => {
   editor.Components.addType(type, {
     isComponent: isComponentType(type),
 
@@ -73,7 +73,7 @@ export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) =
       },
 
       getChildrenSelector() {
-        if (this.model.getAttributes()['full-width']) {
+        if(this.model.getAttributes()['full-width']){
           return 'table > tbody > tr > td > div table > tbody > tr > td';
         }
         else

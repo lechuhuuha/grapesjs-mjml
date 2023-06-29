@@ -1,5 +1,5 @@
 // Specs: https://documentation.mjml.io/#mj-image
-import type grapesjs from 'grapesjs';
+import type { Editor } from 'grapesjs';
 import { componentsToQuery, getName, isComponentType } from './utils';
 import { type as typeSection } from './Section';
 import { type as typeColumn } from './Column';
@@ -8,7 +8,7 @@ import { debounce } from './utils';
 import moment from 'moment';
 export const type = 'mj-timer';
 
-export default (editor: grapesjs.Editor, { coreMjmlModel, coreMjmlView }: any) => {
+export default (editor: Editor, { coreMjmlModel, coreMjmlView }: any) => {
   editor.Components.addType(type, {
     isComponent: customIsComponentType(type),
     extend: 'image',

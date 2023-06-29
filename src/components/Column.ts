@@ -1,11 +1,11 @@
 // Specs: https://documentation.mjml.io/#mj-column
-import type grapesjs from 'grapesjs';
+import type { Editor } from 'grapesjs';
 import { componentsToQuery, getName, isComponentType, mjmlConvert } from './utils';
 import { type as typeSection } from './Section';
 
 export const type = 'mj-column';
 
-export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, sandboxEl }: any) => {
+export default (editor: Editor, { opt, coreMjmlModel, coreMjmlView, sandboxEl }: any) => {
   const clmPadd = opt.columnsPadding;
 
   editor.Components.addType(type, {
@@ -91,7 +91,7 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
         // `;
         this.$el.attr(mjmlResult.attributes);
         editor.addComponents(`<style>${mjmlResult.style}</style>`);
-        this.getChildrenContainer().innerHTML = this.model.get('content');
+        this.getChildrenContainer().innerHTML = this.model.get('content')!;
         this.renderChildren();
         this.renderStyle();
 
@@ -102,11 +102,17 @@ export default (editor: grapesjs.Editor, { opt, coreMjmlModel, coreMjmlView, san
       },
 
       renderStyle() {
-        const model_style = this.model.get('style') || {}
-        const style = Object.keys(this.model.get('style')).map(attr => `${attr}:${model_style[attr]};`)
-        this.el.setAttribute('style', `${this.attributes.style} ${style.join(' ')} ${this.el.getAttribute('style')}`);
+        const { model, attributes, el } = this;
+        const modelStyle = model.get('style') || {};
+        const stylable = model.get('stylable') as string[];
+        const styles = Object.keys(modelStyle)
+          .filter(prop => stylable.indexOf(prop) > -1)
+          .map(prop => `${prop}:${modelStyle[prop]};`);
+        const styleResult = `${attributes.style} ${styles.join(' ')} ${el.getAttribute('style')}`;
+        el.setAttribute('style', styleResult);
+        // #290 Fix double borders
+        el.firstElementChild?.setAttribute('style', '');
         this.checkVisibility();
-
       },
 
       getMjmlTemplate() {
