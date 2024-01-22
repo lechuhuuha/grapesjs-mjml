@@ -1,18 +1,20 @@
 <?php
-// build the ckeditor 
 
-// Function to Copy folders and files       
+// build the ckeditor
+
+// Function to Copy folders and files
 
 function rrmdir($dir)
 {
     if (is_dir($dir)) {
         $objects = scandir($dir);
         foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . "/" . $object))
+            if ($object != '.' && $object != '..') {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . '/' . $object)) {
                     rrmdir($dir . DIRECTORY_SEPARATOR . $object);
-                else
+                } else {
                     unlink($dir . DIRECTORY_SEPARATOR . $object);
+                }
             }
         }
         rmdir($dir);
@@ -65,41 +67,40 @@ function recurseCopy(
 
     closedir($directory);
 }
-
+$currentDir = __DIR__;
 $foldersNeedToCopy = [
-    'D:\repo_from_github\email-builder\grapesjs-mjml\boostrap',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\dist',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\icon',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\jquery',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\locale',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs-plugin-ckeditor',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\moment',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\index.html',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\initGrapesjs.js'
+    $currentDir . '\boostrap',
+    $currentDir . '\dist',
+    $currentDir . '\icon',
+    $currentDir . '\jquery',
+    $currentDir . '\locale',
+    $currentDir . '\node_modules\grapesjs',
+    $currentDir . '\node_modules\grapesjs-plugin-ckeditor',
+    $currentDir . '\node_modules\moment',
+    $currentDir . '\index.html',
+    $currentDir . '\initGrapesjs.js',
 ];
 
-$rootCopyDir = 'D:\repo_from_github\pro-builder\\';
+$rootCopyDir = $currentDir . '\pro-builder\\';
 foreach ($foldersNeedToCopy as $folder) {
 
     $lastFolder = basename($folder);
     echo $lastFolder . PHP_EOL;
     if (is_dir($folder)) {
-        recurseCopy($folder, 'D:\repo_from_github\pro-builder', $lastFolder);
+        recurseCopy($folder, $currentDir . '\pro-builder', $lastFolder);
     } else {
         copy($folder, $rootCopyDir . $lastFolder);
     }
 }
-$nodeDir = 'D:\repo_from_github\pro-builder\node_modules';
+$nodeDir = $currentDir . '\pro-builder\node_modules';
 if (!file_exists($nodeDir)) {
     mkdir($nodeDir);
 }
 
-
 $foldersNeedToMove = [
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\grapesjs-plugin-ckeditor',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\node_modules\moment',
+    $currentDir . '\node_modules\grapesjs',
+    $currentDir . '\node_modules\grapesjs-plugin-ckeditor',
+    $currentDir . '\node_modules\moment',
 ];
 foreach ($foldersNeedToMove as $folder) {
     $lastFolder = basename($folder);
@@ -109,11 +110,11 @@ foreach ($foldersNeedToMove as $folder) {
     }
     rrmdir($rootCopyDir . $lastFolder);
 }
-$rootCopyDir = 'D:\forNewEma\ema\base\public\pro-builder';
+$rootCopyDir = $currentDir . '\pro-builder';
 
 $foldersNeedToMove = [
-    'D:\repo_from_github\email-builder\grapesjs-mjml\dist',
-    'D:\repo_from_github\email-builder\grapesjs-mjml\boostrap',
+    $currentDir . '\dist',
+    $currentDir . '\boostrap',
 ];
 foreach ($foldersNeedToMove as $folder) {
     $lastFolder = basename($folder);
@@ -121,8 +122,15 @@ foreach ($foldersNeedToMove as $folder) {
         recurseCopy($folder, $rootCopyDir, $lastFolder);
         echo $lastFolder . PHP_EOL;
     }
-    // rrmdir($rootCopyDir . $lastFolder);
 }
 
+$foldersNeedToCopy = [
+    $currentDir . '\grapesjs-plugin-ckeditor.min.js',
+];
 
-shell_exec("cd \"D:\\repo_from_github\ckeditor\\\" && php buildJs.php");
+$rootCopyDir = $currentDir . '\pro-builder\node_modules\grapesjs-plugin-ckeditor\dist\\';
+foreach ($foldersNeedToCopy as $folder) {
+    $lastFolder = basename($folder);
+    echo $lastFolder . PHP_EOL;
+    copy($folder, $rootCopyDir . $lastFolder);
+}
