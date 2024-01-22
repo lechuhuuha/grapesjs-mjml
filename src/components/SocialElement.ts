@@ -8,6 +8,8 @@ export const type = 'mj-social-element';
 export default (editor: Editor, { coreMjmlModel, coreMjmlView }: any) => {
   editor.Components.addType(type, {
     isComponent: isComponentType(type),
+    // choose image working so just extend its
+    extend: 'image',
 
     model: {
       ...coreMjmlModel,
