@@ -2,7 +2,7 @@
 private/
 node_modules/
 dist/
-locale/
+/locale/
 .eslintrc
 *.log
 _index.html
