@@ -1,6 +1,5 @@
 <?php
 
-
 //  Function to Copy folders and files
 function rrmdir($dir)
 {
@@ -79,26 +78,26 @@ $foldersNeedToCopy = [
     $currentDir . '/initGrapesjs.js',
 ];
 
-$rootCopyDir = $currentDir . '/pro-builder';
+$rootCopyDir = $currentDir . '/pro-builder/';
 foreach ($foldersNeedToCopy as $folder) {
 
     $lastFolder = basename($folder);
     echo $lastFolder . PHP_EOL;
     if (is_dir($folder)) {
-        recurseCopy($folder, $currentDir . '/pro-builder', $lastFolder);
+        recurseCopy($folder, $currentDir . '/pro-builder/', $lastFolder);
     } else {
         copy($folder, $rootCopyDir . $lastFolder);
     }
 }
-$nodeDir = $currentDir . '/pro-builder/node_modules';
+$nodeDir = $currentDir . '/pro-builder/node_modules/';
 if (!file_exists($nodeDir)) {
     mkdir($nodeDir);
 }
 
 $foldersNeedToMove = [
-    $currentDir . '/node_modules/grapesjs',
-    $currentDir . '/node_modules/grapesjs-plugin-ckeditor',
-    $currentDir . '/node_modules/moment',
+    $currentDir . '/node_modules/grapesjs/',
+    $currentDir . '/node_modules/grapesjs-plugin-ckeditor/',
+    $currentDir . '/node_modules/moment/',
 ];
 foreach ($foldersNeedToMove as $folder) {
     $lastFolder = basename($folder);
@@ -126,7 +125,7 @@ $foldersNeedToCopy = [
     $currentDir . '/grapesjs-plugin-ckeditor.min.js',
 ];
 
-$rootCopyDir = $currentDir . '/pro-builder/node_modules/grapesjs-plugin-ckeditor/dist';
+$rootCopyDir = $currentDir . '/pro-builder/node_modules/grapesjs-plugin-ckeditor/dist/';
 foreach ($foldersNeedToCopy as $folder) {
     $lastFolder = basename($folder);
     echo $lastFolder . PHP_EOL;
