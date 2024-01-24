@@ -6,6 +6,7 @@ jquery
 locale
 node_modules/grapesjs
 node_modules/grapesjs-plugin-ckeditor
+node_modules/moment
 
 cần các file sau
 index.html
