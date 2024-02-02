@@ -7,8 +7,6 @@ dist/
 *.log
 _index.html
 .idea
-ckeditor
 boostrap/ckfinder/
-boostrap/domToImage/
 .npmrc
 pro-builder/
